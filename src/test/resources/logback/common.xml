@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <conversionRule conversionWord="bp" converterClass="com.chen.lang.apollo.openapi.log.BusinessParameterConverter" />
+
+    <!-- 读取spring配置信息 -->
+    <springProperty scope="context" name="SPRING_LOG_PATH" source="logging.path"/>
+    <!-- 读取spring配置信息 -->
+    <springProperty scope="context" name="SPRING_APPLICATION_NAME" source="spring.application.name"/>
+
+    <property name="LOG_PATH" value="${SPRING_LOG_PATH:-./logs}"/>
+
+    <property name="APPLICATION_NAME" value="${SPRING_APPLICATION_NAME:-app}"/>
+
+    <!--管理台打印日志格式-->
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%t]){faint} %clr(%logger{39}){cyan}%clr(:){faint}%bp %m%n"/>
+
+    <!--文件输出时日志格式-->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] %logger{39}:%bp %m%n"/>
+
+    <!--管理台日志appender-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--全量日志输入文件存储-->
+    <appender name="FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-1}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- DEBUG -->
+    <appender name="LOG-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-DEBUG.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-DEBUG.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-1}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <!-- INFO -->
+    <appender name="LOG-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-INFO.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-INFO.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-1}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <!-- WARN -->
+    <appender name="LOG-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-WARN.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-WARN.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-1}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <!-- ERROR -->
+    <appender name="LOG-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <file>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-ERROR.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}/${APPLICATION_NAME}-ERROR.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-1}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+    </appender>
+
+    <logger name="druid.sql.Statement" level="DEBUG"/>
+    <logger name="druid.sql.Connection" level="DEBUG"/>
+    <logger name="druid.sql.ResultSet" level="DEBUG"/>
+    <logger name="io.lettuce.core" level="ERROR"/>
+
+</included>

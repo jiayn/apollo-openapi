@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="logback/common.xml"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_ALL"/>
+        <appender-ref ref="LOG-DEBUG"/>
+        <appender-ref ref="LOG-INFO"/>
+        <appender-ref ref="LOG-WARN"/>
+        <appender-ref ref="LOG-ERROR"/>
+    </root>
+
+    <logger name="org.apache" level="INFO"/>
+    <logger name="org.springframework" level="INFO"/>
+
+</configuration>

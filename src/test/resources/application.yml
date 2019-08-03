@@ -1,0 +1,39 @@
+app:
+  apollo:
+    api:
+      import-http-api-properties:
+        #平台地址
+        hostUrl: http://106.12.25.204:8070/
+        #登录名
+        userName: apollo
+        #密码
+        password: admin
+      export-http-api-properties:
+        #平台地址a
+        hostUrl: http://106.12.25.204:8070/
+        #登录名
+        userName: apollo
+        #密码
+        password: admin
+      import-open-api-properties:
+        #平台地址
+        portalUrl: http://106.12.25.204:8070/
+        #第三方应用授权
+        token: fcd182e92c989f5317d8f60d633139b3c761535d
+        #操作人
+        operator: apollo
+      export-open-api-properties:
+        #平台地址
+        portalUrl: http://106.12.25.204:8070/
+        #第三方应用授权
+        token: fcd182e92c989f5317d8f60d633139b3c761535d
+        #操作人
+        operator: apollo
+    appIds:
+      - xxx-app-web
+      - xxx-app-public
+
+    orgId: dev1
+    orgName: 研发一部
+    apolloDataFilePath: apollo-openapi/apollo
+    importEnv: DEV
