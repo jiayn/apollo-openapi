@@ -11,3 +11,5 @@
 4. 导入设置 ,新建APP,NAMESPACE,更新item，三方授权，导入配置数据 
 
     
+### ***如有帮助，请支持（支付宝扫码）***
+![支付宝](https://raw.githubusercontent.com/chenGit1763113879QQ/apollo-openapi/master/alipay.png)
