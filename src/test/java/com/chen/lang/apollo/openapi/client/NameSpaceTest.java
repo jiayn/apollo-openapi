@@ -37,7 +37,7 @@ public class NameSpaceTest extends SpringBootBaseTest {
     @Test
     public void creatPublicNameSpace() {
         String appId = String.format("dev1_1_appId%d", 18);
-        createPublicNamespaceByAppId("dev1.system4", appId, "公共配置4");
+        createPublicNamespaceByAppId("system7", appId, "公共配置7");
     }
 
     private void createPublicNamespaceByAppId(String namespace, String appId, String comment) {
@@ -55,7 +55,7 @@ public class NameSpaceTest extends SpringBootBaseTest {
         appNamespaceDTO.setAppId(appId);
         appNamespaceDTO.setFormat("properties");
         appNamespaceDTO.setPublic(true);
-        appNamespaceDTO.setAppendNamespacePrefix(false);
+        appNamespaceDTO.setAppendNamespacePrefix(true);
         appNamespaceDTO.setComment(comment);
         appNamespaceDTO.setDataChangeCreatedBy("apollo");
         apolloConfigFileService.getHttpApiServiceClient()

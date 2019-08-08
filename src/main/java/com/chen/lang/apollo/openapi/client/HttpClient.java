@@ -24,11 +24,14 @@ import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author czq@chen.cn.cn
  * @version V2.1
  * @since 2.1.0 2019-04-23 17:32
  */
+@Slf4j
 public class HttpClient {
 
     private static Gson gson = (new GsonBuilder()).serializeNulls()
@@ -82,6 +85,9 @@ public class HttpClient {
     private CloseableHttpResponse execute(HttpEntityEnclosingRequestBase requestBase, Object entity)
     throws IOException {
         String param = (entity instanceof String) ? (String) entity : gson.toJson(entity);
+
+        log.debug("请求 = {}, 参数： {}", requestBase.getURI()
+            .getPath(), param);
         requestBase.setEntity(new StringEntity(param, ContentType.APPLICATION_JSON));
 
         return execute(requestBase);
