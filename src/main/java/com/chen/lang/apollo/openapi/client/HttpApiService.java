@@ -17,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.chen.lang.apollo.openapi.entity.dto.AppDTO;
 import com.chen.lang.apollo.openapi.entity.dto.OpenAppDTO;
+import com.chen.lang.apollo.openapi.util.IPUtil;
 import com.chen.lang.apollo.openapi.util.JsonUtil;
 import com.ctrip.framework.apollo.openapi.client.constant.ApolloOpenApiConstants;
 import com.ctrip.framework.apollo.openapi.dto.OpenAppNamespaceDTO;
@@ -24,7 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.chen.lang.apollo.openapi.util.IPUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -182,7 +182,7 @@ public class HttpApiService {
      */
     public void createPrivateAppNamespace(OpenAppNamespaceDTO dto) {
 
-        String path = String.format("/apps/%s/appnamespaces?appendNamespacePrefix=false", dto.getAppId());
+        String path = String.format("/apps/%s/appnamespaces", dto.getAppId());
         try (CloseableHttpResponse response = httpClient.post(path, dto)) {
             System.out.println(" 生成新的 nameSpace 返回结果为：" + response);
             System.out.println(JsonUtil.toPrettyFormat(EntityUtils.toString(response.getEntity())));
