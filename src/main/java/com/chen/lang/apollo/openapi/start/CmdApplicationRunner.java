@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Order(value = Integer.MAX_VALUE)
 @Slf4j
-@ConditionalOnProperty(value = {"start.cmd.enable"}, matchIfMissing = false)
+@ConditionalOnProperty(value = {"start.cmd.enable"}, matchIfMissing = true)
 public class CmdApplicationRunner implements ApplicationRunner {
 
     @Autowired

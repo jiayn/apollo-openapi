@@ -10,14 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ctrip.framework.apollo.openapi.dto.*;
 import org.springframework.util.CollectionUtils;
 
 import com.chen.lang.apollo.openapi.entity.dto.OpenAppDTO;
 import com.chen.lang.apollo.openapi.util.JsonUtil;
 import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
-import com.ctrip.framework.apollo.openapi.dto.OpenEnvClusterDTO;
-import com.ctrip.framework.apollo.openapi.dto.OpenItemDTO;
-import com.ctrip.framework.apollo.openapi.dto.OpenNamespaceDTO;
 import com.chen.lang.apollo.openapi.util.ApolloPropertiesUtil;
 import com.chen.lang.apollo.openapi.util.FileUtil;
 import com.chen.lang.apollo.openapi.util.IPUtil;
@@ -231,6 +229,23 @@ public class OpenAPI {
         return this.client;
     }
 
+
+    public OpenAppNamespaceDTO createNamespaceByAppId(String namespace, String appId, String comment,String userName,  boolean aPublic) {
+
+        OpenAppNamespaceDTO appNamespaceDTO = new OpenAppNamespaceDTO();
+        appNamespaceDTO.setName(namespace);
+        appNamespaceDTO.setAppId(appId);
+        appNamespaceDTO.setFormat("properties");
+        if (aPublic) {
+            appNamespaceDTO.setPublic(true);
+        } else {
+            appNamespaceDTO.setPublic(false);
+        }
+        appNamespaceDTO.setComment(comment);
+        appNamespaceDTO.setDataChangeCreatedBy(userName);
+        return client.createAppNamespace(appNamespaceDTO);
+    }
+
     /**
      * 导入文件
      *
@@ -241,9 +256,17 @@ public class OpenAPI {
      */
     public void importConfigFile(String env, String userName, String filePath) throws IOException {
         OpenNamespaceDTO openNamespaceDTO = ApolloPropertiesUtil.generateOpenNamespaceDTOFromFile(filePath);
+        OpenNamespaceDTO oldOpenNamespaceDTO;
+        try {
+            oldOpenNamespaceDTO = this.getOpenNamespaceDTO(openNamespaceDTO.getAppId(),
+                    openNamespaceDTO.getClusterName(), env, openNamespaceDTO.getNamespaceName());
+        }
+        catch(Exception e) {
+            createNamespaceByAppId(openNamespaceDTO.getNamespaceName(),openNamespaceDTO.getAppId(), "Initial property", userName, false);
+            oldOpenNamespaceDTO = this.getOpenNamespaceDTO(openNamespaceDTO.getAppId(),
+                    openNamespaceDTO.getClusterName(), env, openNamespaceDTO.getNamespaceName());
+        }
 
-        OpenNamespaceDTO oldOpenNamespaceDTO = this.getOpenNamespaceDTO(openNamespaceDTO.getAppId(),
-            openNamespaceDTO.getClusterName(), env, openNamespaceDTO.getNamespaceName());
         HashMap<String, OpenItemDTO> itemDTOHashMap = new HashMap<>();
         if (oldOpenNamespaceDTO != null && oldOpenNamespaceDTO.getItems() != null) {
             oldOpenNamespaceDTO.getItems()
@@ -271,6 +294,12 @@ public class OpenAPI {
                     ;
                 });
 
+            NamespaceReleaseDTO releaseDTO = new NamespaceReleaseDTO();
+            releaseDTO.setReleaseTitle("Apollo tool automatically load configuration file");
+            releaseDTO.setReleaseComment("test comment");
+            releaseDTO.setReleasedBy("apollo");
+            releaseDTO.setEmergencyPublish(false);
+            client.publishNamespace(openNamespaceDTO.getAppId(), env, openNamespaceDTO.getClusterName(), openNamespaceDTO.getNamespaceName(), releaseDTO);
         }
     }
 }
