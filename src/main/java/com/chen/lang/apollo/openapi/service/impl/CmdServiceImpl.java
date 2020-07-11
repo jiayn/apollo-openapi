@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Scanner;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,27 +55,12 @@ public class CmdServiceImpl implements CmdService {
     }
 
     private void checkConfig(Scanner sc) throws Exception {
-        String config = String.format(
-            "请检查程序加载的配置，\n %s" + "\n如果确认无误，输入【 y 】继续执行业务！" + "\n如需修改，输入其他信息退出程序，然后在同级目录中配置 application.yml，完成后重新执行",
-            JsonUtil.toPrettyFormat(apiConfigProperties.getApi()));
-        InputResultBean resultInputBean = CMDUtil.inputValue(config, sc);
-        if (resultInputBean.isExit()) {
-            return;
-        }
-        switch (resultInputBean.getInputStr()) {
-            case "y":
-                executeBusiness(sc);
-                break;
-            default:
-                System.out.println("请在同级目录中配置 application.yml，完成后重新执行");
-                System.exit(0);
-        }
+        executeBusiness(sc);
     }
 
     private void executeBusiness(Scanner sc) throws Exception {
         while (true) {
-            String title = "1.导出全部配置\n" + "2.根据APPID,导出指定应用配置\n" + "3.导入namespace配置文件\n" + "4.初始化apollo数据配置\n"
-                + "其他操作退出程序";
+            String title = "1.导出全部配置\n" + "2.根据APPID,导出指定应用配置\n" + "3.导入namespace配置文件\n" + "其他操作退出程序";
             InputResultBean inputResultBean = CMDUtil.inputValue(title, sc);
             if (inputResultBean.isExit()) {
                 return;
@@ -89,9 +76,6 @@ public class CmdServiceImpl implements CmdService {
                     break;
                 case "3":
                     importConfig(sc);
-                    break;
-                case "4":
-                    initApollo();
                     break;
                 default:
                     System.out.println("退出程序。。。。");
@@ -132,7 +116,13 @@ public class CmdServiceImpl implements CmdService {
             }
             switch (resultInputBean.getInputStr()) {
                 case "y":
-                    apolloConfigFileService.importNameSpaceConfigFile(filePath.trim(), env.trim());
+                    List<String> list = Lists.newArrayList();
+                    getFiles(filePath, list);
+
+                    for (String filep: list) {
+                        apolloConfigFileService.importNameSpaceConfigFile(filep.trim(), env.trim());
+                    }
+
                     break;
                 default:
                     System.out.println("请重新输入");
@@ -140,6 +130,38 @@ public class CmdServiceImpl implements CmdService {
             }
         }
 
+    }
+
+    public static void getFiles(String path, List<String> list) {
+        File file = new File(path);
+        // 如果这个路径是文件夹
+        if (file.isDirectory()) {
+            // 获取路径下的所有文件
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File value : files) {
+                    // 如果还是文件夹 递归获取里面的文件 文件夹
+                    if (value.isDirectory()) {
+                        System.out.println("目录：" + value.getPath());
+                        getFiles(value.getPath(), list);
+                    } else {
+                        if (value.getName()
+                                .endsWith("properties")) {
+                            System.out.println("文件：" + value.getPath());
+                            list.add(value.getPath());
+                        }
+                    }
+
+                }
+            }
+
+        } else {
+            if (file.getName()
+                    .endsWith("properties")) {
+                System.out.println("文件：" + file.getPath());
+                list.add(file.getPath());
+            }
+        }
     }
 
     private void exportConfig(Scanner sc) throws Exception {
