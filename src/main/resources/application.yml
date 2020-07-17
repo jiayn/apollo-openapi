@@ -3,36 +3,36 @@ app:
     api:
       import-http-api-properties:
         #平台地址
-        hostUrl: http://10.50.114.180:8070/
+        hostUrl: https://apollo-porta.conviva.com
         #登录名
         userName: apollo
         #密码
-        password: admin
+        password: conviva123
       export-http-api-properties:
         #平台地址a
-        hostUrl: http://10.50.114.180:8070/
+        hostUrl: https://apollo-porta.conviva.com
         #登录名
         userName: apollo
         #密码
-        password: admin
+        password: conviva123
       import-open-api-properties:
         #平台地址
-        portalUrl: http://10.50.114.180:8070/
+        portalUrl: https://apollo-porta.conviva.com
         #第三方应用授权
-        token: 87e6e47e131f408a79bc2b727242f44c4667696a
+        token: b076055e58640d12dbce1c4a40f5dafb43ef3fca
         #操作人
         operator: apollo
       export-open-api-properties:
         #平台地址
-        portalUrl: http://10.50.114.180:8070/
+        portalUrl: https://apollo-porta.conviva.com
         #第三方应用授权
-        token: 87e6e47e131f408a79bc2b727242f44c4667696a
+        token: b076055e58640d12dbce1c4a40f5dafb43ef3fca
         #操作人
         operator: apollo
     appIds:
-      - CI-Test
+      - CI-TEST
 
     orgId: Conviva-BJ
-    orgName: Conviva BeiJing
+    orgName: Conviva Beijing
     apolloDataFilePath: apollo-openapi/apollo
     importEnv: DEV
